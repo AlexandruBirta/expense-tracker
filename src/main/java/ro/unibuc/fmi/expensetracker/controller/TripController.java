@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ro.unibuc.fmi.expensetracker.model.Trip;
 import ro.unibuc.fmi.expensetracker.service.TripService;
+import ro.unibuc.fmi.expensetracker.singleton.LogApplicationRequests;
 
 @RestController
 @RequestMapping("/v1/trips")
@@ -14,6 +15,7 @@ public class TripController {
 
     @PostMapping
     Trip create(@RequestBody Trip trip) {
+        LogApplicationRequests.getInstance().logTripCreation();
         return tripService.createTrip(trip);
     }
 
