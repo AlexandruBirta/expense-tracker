@@ -1,16 +1,16 @@
 package ro.unibuc.fmi.expensetracker.controller;
 
-import ro.unibuc.fmi.expensetracker.api.UserApi;
+import org.springframework.web.bind.annotation.RestController;
+import ro.unibuc.fmi.expensetracker.dto.UserDTO;
 import ro.unibuc.fmi.expensetracker.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import ro.unibuc.fmi.expensetracker.service.UserService;
 import ro.unibuc.fmi.expensetracker.singleton.LogApplicationRequests;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 public class UserController implements UserApi {
 
     private final UserService userService;
@@ -21,9 +21,9 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public void createUser(@RequestBody @Valid User user) {
+    public UserDTO createUser(@RequestBody @Valid User user) {
         LogApplicationRequests.getInstance().logUserCreation();
-        userService.createUser(user);
+        return userService.createUser(user);
     }
 
     @Override
