@@ -13,15 +13,11 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String email;
-    private LocalDateTime insertedDate;
-    private LocalDateTime updatedDate;
 
     public UserDTO(User savedUser) {
         this.userId = savedUser.getUserId();
         this.firstName = savedUser.getFirstName();
         this.lastName = savedUser.getLastName();
         this.email = savedUser.getEmail();
-        this.insertedDate = savedUser.getInsertedDate();
-        this.updatedDate = savedUser.getUpdatedDate();
     }
 }
