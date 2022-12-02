@@ -1,5 +1,7 @@
 package ro.unibuc.fmi.expensetracker.service;
 
+import lombok.AllArgsConstructor;
+import ro.unibuc.fmi.expensetracker.dto.UserDTO;
 import ro.unibuc.fmi.expensetracker.exception.ApiException;
 import ro.unibuc.fmi.expensetracker.exception.ExceptionStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -17,13 +19,12 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Transactional
-    public void createUser(User user) {
+    public UserDTO createUser(User user) {
 
         List<User> repoUsers = userRepository.findAll();
 
@@ -32,10 +33,9 @@ public class UserService {
                 throw new ApiException(ExceptionStatus.USER_ALREADY_EXISTS, repoUser.getEmail());
             }
         }
-
-        userRepository.save(user);
         log.info("Created " + user);
 
+        return new UserDTO(userRepository.save(user));
     }
 
     public User getUserById(Long userId) {
