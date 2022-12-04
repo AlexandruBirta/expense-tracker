@@ -1,34 +1,42 @@
 package ro.unibuc.fmi.expensetracker.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity
 @Table(name = "trip")
 public class Trip {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trip_id", nullable = false)
     private Long tripId;
-    private String initiatedByUserId;
+
+    private Long initiatedByUserId;
+
     private Integer groupSize;
-    private Long expenseTotalSum;
+
+    @Column(name = "expense_total_sum", columnDefinition = "Decimal(10,2) default '0.00'")
+    private BigDecimal expenseTotalSum = BigDecimal.ZERO;
+
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
-            },mappedBy = "trips")
+            }, mappedBy = "trips")
     @JsonIgnore
     private Set<User> users;
 
@@ -44,4 +52,15 @@ public class Trip {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "tripId = " + tripId + ", " +
+                "initiatedByUserId = " + initiatedByUserId + ", " +
+                "groupSize = " + groupSize + ", " +
+                "expenseTotalSum = " + expenseTotalSum + ", " +
+                "description = " + description + ")";
+    }
+
 }

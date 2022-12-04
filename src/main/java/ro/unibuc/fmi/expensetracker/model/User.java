@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
@@ -19,11 +20,11 @@ import java.util.Set;
 @Builder
 @Schema
 @Entity
-@Table(name = "user")
+@Table(name = "user_account")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     @Schema
     private Long userId;
@@ -36,6 +37,7 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
+    @Email
     @Schema(maximum = "50", required = true)
     @Column(nullable = false, unique = true)
     private String email;
@@ -49,6 +51,7 @@ public class User {
     @Column(nullable = false)
     @UpdateTimestamp
     private LocalDateTime updatedDate;
+
     @ManyToMany
     @JoinTable(
             name = "user_trips",
@@ -56,6 +59,24 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "trip_id"))
     @JsonIgnore
     private Set<Trip> trips;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_expenses",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "expense_id"))
+    @JsonIgnore
+    private Set<Expense> expenses;
+
+    public void addTrip(Trip trip) {
+        this.trips.add(trip);
+        trip.getUsers().add(this);
+    }
+
+    public void addExpense(Expense expense) {
+        this.expenses.add(expense);
+        expense.getUsers().add(this);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -70,11 +91,6 @@ public class User {
         return getClass().hashCode();
     }
 
-    public void addTrip(Trip trip) {
-        this.trips.add(trip);
-        trip.getUsers().add(this);
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -86,4 +102,5 @@ public class User {
                 ", updatedDate=" + updatedDate +
                 '}';
     }
+
 }

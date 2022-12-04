@@ -1,14 +1,16 @@
 package ro.unibuc.fmi.expensetracker.singleton;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Instant;
 
+@Slf4j
 public class LogApplicationRequests {
-    private PrintWriter printWriter;
-
     private static LogApplicationRequests logApplicationRequests = null;
+    private PrintWriter printWriter;
 
     private LogApplicationRequests() {
         try {
@@ -20,20 +22,25 @@ public class LogApplicationRequests {
         }
     }
 
-    public static synchronized LogApplicationRequests getInstance(){
-        if(logApplicationRequests == null)
+    public static synchronized LogApplicationRequests getInstance() {
+        if (logApplicationRequests == null)
             logApplicationRequests = new LogApplicationRequests();
         return logApplicationRequests;
     }
 
     public void logTripCreation() {
-        System.out.println("Logging successful");
+        log.info("Logging successful");
         printWriter.println("A request to create a Trip was initiated on date: " + Instant.now());
     }
 
     public void logUserCreation() {
-        System.out.println("Logging successful");
-        printWriter.println("A request to create a User was initiated on date: " + Instant.now());
+        log.info("Logging successful");
+        printWriter.println("A request to create an User was initiated on date: " + Instant.now());
+    }
+
+    public void logExpenseCreation() {
+        log.info("Logging successful");
+        printWriter.println("A request to create an Expense was initiated on date: " + Instant.now());
     }
 
 }

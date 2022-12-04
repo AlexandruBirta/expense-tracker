@@ -6,14 +6,13 @@ import lombok.Getter;
 public class ApiException extends RuntimeException {
 
     private final ExceptionStatus exceptionStatus;
-    private final String errorParameter;
+    private final String[] errorParameters;
     private final String errorMessage;
 
-    public ApiException(ExceptionStatus exceptionStatus, String errorParameter) {
+    public ApiException(ExceptionStatus exceptionStatus, String... errorParameters) {
         this.exceptionStatus = exceptionStatus;
-        this.errorParameter = errorParameter;
-        this.errorMessage = String.format(exceptionStatus.toString(), errorParameter);
+        this.errorParameters = errorParameters;
+        this.errorMessage = String.format(exceptionStatus.toString(), errorParameters);
     }
 
 }
-
