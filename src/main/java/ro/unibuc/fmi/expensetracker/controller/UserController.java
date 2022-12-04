@@ -1,14 +1,16 @@
 package ro.unibuc.fmi.expensetracker.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-import ro.unibuc.fmi.expensetracker.dto.UserDTO;
-import ro.unibuc.fmi.expensetracker.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import ro.unibuc.fmi.expensetracker.api.UserApi;
+import ro.unibuc.fmi.expensetracker.dto.UserDTO;
+import ro.unibuc.fmi.expensetracker.model.User;
 import ro.unibuc.fmi.expensetracker.service.UserService;
 import ro.unibuc.fmi.expensetracker.singleton.LogApplicationRequests;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 
 @RestController
 public class UserController implements UserApi {
@@ -39,6 +41,11 @@ public class UserController implements UserApi {
     @Override
     public void updateEmail(Long userId, String email) {
         userService.updateEmail(userId, email);
+    }
+
+    @Override
+    public BigDecimal getUserAmountToPay(Long userId, Long expenseId) {
+        return userService.getUserAmountToPay(userId, expenseId);
     }
 
 }

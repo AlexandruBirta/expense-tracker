@@ -3,14 +3,19 @@ package ro.unibuc.fmi.expensetracker.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ro.unibuc.fmi.expensetracker.dto.TripDTO;
+import ro.unibuc.fmi.expensetracker.exception.ApiException;
+import ro.unibuc.fmi.expensetracker.exception.ExceptionStatus;
 import ro.unibuc.fmi.expensetracker.model.Trip;
 import ro.unibuc.fmi.expensetracker.model.User;
 import ro.unibuc.fmi.expensetracker.repository.TripRepository;
 import ro.unibuc.fmi.expensetracker.repository.UserRepository;
 
-import javax.transaction.Transactional;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -27,30 +32,49 @@ public class TripService {
     }
 
     public Trip getTripById(Long tripId) {
-        Optional<Trip> optionalTrip = tripRepository.findById(tripId);
-        if (optionalTrip.isPresent()) {
-            return optionalTrip.get();
-        } else {
-            throw new RuntimeException("Trip not found!");
-        }
+        return tripRepository.findById(tripId).orElseThrow(
+                () -> new ApiException(ExceptionStatus.TRIP_NOT_FOUND, String.valueOf(tripId)));
     }
 
     public TripDTO addMembersToTrip(Long tripId, List<Long> userIds) {
-        Optional<Trip> tripFromDb = tripRepository.findById(tripId);
-        if (tripFromDb.isEmpty()) {
-            throw new RuntimeException("Trip not found!");
-        }
+
+        Trip trip = tripRepository.findById(tripId).orElseThrow(
+                () -> new ApiException(ExceptionStatus.TRIP_NOT_FOUND, String.valueOf(tripId)));
+
         Set<User> users = new HashSet<>();
+
         for (Long id : userIds) {
-            Optional<User> user = userRepository.findById(id);
-            user.get().addTrip(tripFromDb.get());
-            userRepository.save(user.get());
-            user.ifPresent(users::add);
+
+            User user = userRepository.findById(id).orElseThrow(
+                    () -> new ApiException(ExceptionStatus.USER_NOT_FOUND, String.valueOf(id)));
+
+            user.addTrip(trip);
+            userRepository.save(user);
+            users.add(user);
+
         }
-        tripFromDb.get().setUsers(users);
 
-        tripRepository.save(tripFromDb.get());
+        trip.setUsers(users);
+        tripRepository.save(trip);
 
-        return new TripDTO(tripFromDb.get());
+        return new TripDTO(trip);
+
     }
+
+    public void deleteTrip(Long tripId) {
+
+        if (!tripRepository.existsById(tripId)) {
+            throw new ApiException(ExceptionStatus.TRIP_NOT_FOUND, String.valueOf(tripId));
+        }
+
+        tripRepository.deleteById(tripId);
+        log.info("Deleted trip with id '" + tripId + "'");
+
+    }
+
+    public BigDecimal getTripTotalSum(Long tripId) {
+        return tripRepository.findById(tripId).orElseThrow(
+                () -> new ApiException(ExceptionStatus.TRIP_NOT_FOUND, String.valueOf(tripId))).getExpenseTotalSum();
+    }
+
 }

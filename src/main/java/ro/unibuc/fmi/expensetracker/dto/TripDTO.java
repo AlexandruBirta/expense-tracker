@@ -5,15 +5,17 @@ import lombok.NoArgsConstructor;
 import ro.unibuc.fmi.expensetracker.model.Trip;
 import ro.unibuc.fmi.expensetracker.model.User;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 public class TripDTO {
+
     private Long tripId;
-    private String initiatedByUserId;
+    private Long initiatedByUserId;
     private Integer groupSize;
-    private Long expenseTotalSum;
+    private BigDecimal expenseTotalSum;
     private String description;
     private Set<User> users;
 
@@ -25,4 +27,5 @@ public class TripDTO {
         this.description = trip.getDescription();
         this.users = trip.getUsers();
     }
+
 }
