@@ -30,7 +30,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"firstName\":\"Popescu\",\r\n    \"lastName\":\"Marcel\",\r\n    \"email\":\"popescu.marcel@email.com\"\r\n}"
+              "raw": "{\r\n    \"firstName\":\"Ion\",\r\n    \"lastName\":\"Popescu\",\r\n    \"email\":\"popescu.ion@email.com\"\r\n}"
             },
             "url": {
               "raw": "http://{{host}}:{{port}}/{{apiEndpoint}}/users",
@@ -109,7 +109,7 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "pm.globals.set(\"userId\", \"2\");\r",
+                  "pm.globals.set(\"userId\", \"1\");\r",
                   "pm.globals.set(\"expenseId\", \"1\");"
                 ],
                 "type": "text/javascript"
@@ -424,7 +424,7 @@
               "script": {
                 "exec": [
                   "pm.globals.set(\"tripId\", \"1\");\r",
-                  "pm.globals.set(\"userId\", \"1,2\");"
+                  "pm.globals.set(\"userIds\", \"1,2\");"
                 ],
                 "type": "text/javascript"
               }
@@ -434,7 +434,7 @@
               "script": {
                 "exec": [
                   "pm.globals.unset(\"tripId\");\r",
-                  "pm.globals.unset(\"userId\");"
+                  "pm.globals.unset(\"userIds\");"
                 ],
                 "type": "text/javascript"
               }
@@ -445,7 +445,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"amountPaid\": 10.22,\r\n    \"description\": \"bought a box of donuts\",\r\n    \"expenseType\": \"group\"\r\n}",
+              "raw": "{\r\n    \"amountPaid\": 2.99,\r\n    \"description\": \"bought a box of chocolates\",\r\n    \"expenseType\": \"group\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -453,7 +453,7 @@
               }
             },
             "url": {
-              "raw": "http://{{host}}:{{port}}/{{apiEndpoint}}/trips/{{tripId}}/expenses?userId={{userId}}",
+              "raw": "http://{{host}}:{{port}}/{{apiEndpoint}}/trips/{{tripId}}/expenses?userIds={{userIds}}",
               "protocol": "http",
               "host": [
                 "{{host}}"
@@ -467,8 +467,8 @@
               ],
               "query": [
                 {
-                  "key": "userId",
-                  "value": "{{userId}}"
+                  "key": "userIds",
+                  "value": "{{userIds}}"
                 }
               ]
             }
@@ -516,6 +516,66 @@
                 "{{apiEndpoint}}",
                 "expenses",
                 "{{expenseId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notification API",
+      "item": [
+        {
+          "name": "Get Notifications By User Id",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.globals.set(\"userId\", \"2\");"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.globals.unset(\"userId\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "default"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "default"
+              }
+            ],
+            "url": {
+              "raw": "http://{{host}}:{{port}}/{{apiEndpoint}}/notifications/{{userId}}",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "{{apiEndpoint}}",
+                "notifications",
+                "{{userId}}"
               ]
             }
           },
