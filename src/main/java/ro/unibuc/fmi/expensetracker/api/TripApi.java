@@ -40,7 +40,7 @@ public interface TripApi {
     @PostMapping(value = "/trips/{tripId}/expenses",
             produces = {"application/json"})
     @ResponseStatus(HttpStatus.CREATED)
-    Expense createTripExpense(@Parameter(description = "ID of Trip", required = true) @PathVariable("tripId") Long tripId, @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Expense to attach to trip", required = true) @RequestBody Expense expense, @Parameter(description = "User IDs", required = true) @RequestParam List<Long> userId);
+    void createTripExpense(@Parameter(description = "ID of Trip", required = true) @PathVariable("tripId") Long tripId, @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Expense to attach to trip", required = true) @RequestBody Expense expense, @Parameter(description = "User IDs", required = true) @RequestParam List<Long> userIds);
 
     @Operation(summary = "Find trip by ID", operationId = "getTripById", description = "Returns a single Trip", tags = {"trips"})
     @ApiResponses(value = {

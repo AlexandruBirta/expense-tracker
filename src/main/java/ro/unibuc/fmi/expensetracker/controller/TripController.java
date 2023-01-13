@@ -10,6 +10,7 @@ import ro.unibuc.fmi.expensetracker.dto.TripDTO;
 import ro.unibuc.fmi.expensetracker.model.Expense;
 import ro.unibuc.fmi.expensetracker.model.Trip;
 import ro.unibuc.fmi.expensetracker.service.ExpenseService;
+import ro.unibuc.fmi.expensetracker.service.NotificationService;
 import ro.unibuc.fmi.expensetracker.service.TripService;
 import ro.unibuc.fmi.expensetracker.singleton.LogApplicationRequests;
 
@@ -22,6 +23,7 @@ public class TripController implements TripApi {
 
     private final TripService tripService;
     private final ExpenseService expenseService;
+    private final NotificationService notificationService;
 
     @Override
     public Trip createTrip(@RequestBody Trip trip) {
@@ -30,9 +32,26 @@ public class TripController implements TripApi {
     }
 
     @Override
-    public Expense createTripExpense(@PathVariable Long tripId, @RequestBody Expense expense, @RequestParam List<Long> userId) {
+    public void createTripExpense(@PathVariable Long tripId, @RequestBody Expense expense, @RequestParam List<Long> userIds) {
+
         LogApplicationRequests.getInstance().logExpenseCreation();
-        return expenseService.createExpense(tripId, expense, userId);
+        expenseService.createExpense(tripId, expense, userIds);
+        Trip trip = tripService.getTripById(tripId);
+
+        if (Expense.ExpenseType.GROUP.equals(expense.getExpenseType())) {
+
+            for (Long userId : userIds) {
+
+                if (!userId.equals(trip.getInitiatedByUserId())) {
+
+                    notificationService.createNotification(userId, tripId, expense.getExpenseId());
+
+                }
+
+            }
+
+        }
+
     }
 
     @Override

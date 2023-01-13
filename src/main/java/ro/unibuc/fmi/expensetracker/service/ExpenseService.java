@@ -27,8 +27,9 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    public Expense createExpense(Long tripId, Expense expense, List<Long> userIds) {
+    public void createExpense(Long tripId, Expense expense, List<Long> userIds) {
 
         Trip trip = tripRepository.findById(tripId).orElseThrow(
                 () -> new ApiException(ExceptionStatus.TRIP_NOT_FOUND, String.valueOf(tripId)));
@@ -62,11 +63,7 @@ public class ExpenseService {
 
         trip.setExpenseTotalSum(tripTotalSum.add(expense.getAmountPaid()));
 
-        if (Expense.ExpenseType.GROUP.equals(expense.getExpenseType())) {
-            //TODO notify users
-        }
-
-        return expenseRepository.save(expense);
+        expenseRepository.save(expense);
     }
 
     public Expense getExpenseById(Long expenseId) {
