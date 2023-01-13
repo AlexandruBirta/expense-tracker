@@ -1,13 +1,17 @@
 package ro.unibuc.fmi.expensetracker.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -21,15 +25,20 @@ public class Trip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trip_id", nullable = false)
+    @Schema
     private Long tripId;
 
+    @Schema
     private Long initiatedByUserId;
 
+    @Schema
     private Integer groupSize;
 
     @Column(name = "expense_total_sum", columnDefinition = "Decimal(10,2) default '0.00'")
+    @Schema
     private BigDecimal expenseTotalSum = BigDecimal.ZERO;
 
+    @Schema
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY,
@@ -38,7 +47,16 @@ public class Trip {
                     CascadeType.MERGE
             }, mappedBy = "trips")
     @JsonIgnore
+    @Schema
     private Set<User> users;
+
+    @Column(nullable = false)
+    @CreationTimestamp
+    private LocalDateTime insertedDate;
+
+    @Column(nullable = false)
+    @UpdateTimestamp
+    private LocalDateTime updatedDate;
 
     @Override
     public boolean equals(Object o) {
