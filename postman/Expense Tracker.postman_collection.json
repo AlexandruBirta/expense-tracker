@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "91f0263e-9c76-498a-afb0-513777f1af71",
+    "_postman_id": "ebe71f55-7a50-4f0f-b14d-4a07aad480a3",
     "name": "Expense Tracker",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "15862032"
@@ -109,6 +109,65 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
+                  "pm.globals.set(\"userId\", \"2\");\r",
+                  "pm.globals.set(\"expenseId\", \"1\");"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.globals.unset(\"userId\");\r",
+                  "pm.globals.unset(\"expenseId\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "default"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "default"
+              }
+            ],
+            "url": {
+              "raw": "http://{{host}}:{{port}}/{{apiEndpoint}}/users/{{userId}}/expenses/{{expenseId}}",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "{{apiEndpoint}}",
+                "users",
+                "{{userId}}",
+                "expenses",
+                "{{expenseId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Expenses Report",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
                   "pm.globals.set(\"userId\", \"1\");\r",
                   "pm.globals.set(\"expenseId\", \"1\");"
                 ],
@@ -156,6 +215,75 @@
                 "{{userId}}",
                 "expenses",
                 "{{expenseId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Expenses Report By Date",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.globals.set(\"start\", \"2023-01-19T11:08:35.257609\");\r",
+                  "pm.globals.set(\"end\", \"2023-01-21T11:08:35.257609\");\r",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.globals.unset(\"start\");\r",
+                  "pm.globals.unset(\"end\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "default"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "default"
+              }
+            ],
+            "url": {
+              "raw": "http://{{host}}:{{port}}/{{apiEndpoint}}/users/expenses/report?start={{start}}&end={{end}}",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "{{apiEndpoint}}",
+                "users",
+                "expenses",
+                "report"
+              ],
+              "query": [
+                {
+                  "key": "start",
+                  "value": "{{start}}"
+                },
+                {
+                  "key": "end",
+                  "value": "{{end}}"
+                }
               ]
             }
           },
@@ -274,28 +402,6 @@
                   "key": "email",
                   "value": "{{email}}"
                 }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Generate user report",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:8080/v1/users/expenses/report",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "v1",
-                "users",
-                "expenses",
-                "report"
               ]
             }
           },
