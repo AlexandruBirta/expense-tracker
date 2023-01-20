@@ -278,6 +278,28 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Generate user report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/v1/users/expenses/report",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "users",
+                "expenses",
+                "report"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },

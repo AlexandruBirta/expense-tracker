@@ -41,8 +41,6 @@ public class TripService {
         Trip trip = tripRepository.findById(tripId).orElseThrow(
                 () -> new ApiException(ExceptionStatus.TRIP_NOT_FOUND, String.valueOf(tripId)));
 
-        Set<User> users = new HashSet<>();
-
         for (Long id : userIds) {
 
             User user = userRepository.findById(id).orElseThrow(
@@ -50,12 +48,10 @@ public class TripService {
 
             user.addTrip(trip);
             userRepository.save(user);
-            users.add(user);
 
+            trip.getUsers().add(user);
+            tripRepository.save(trip);
         }
-
-        trip.setUsers(users);
-        tripRepository.save(trip);
 
         return new TripDTO(trip);
 

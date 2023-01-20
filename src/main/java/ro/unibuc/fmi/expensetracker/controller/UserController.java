@@ -4,22 +4,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ro.unibuc.fmi.expensetracker.api.UserApi;
+import ro.unibuc.fmi.expensetracker.dto.ExpenseDTO;
 import ro.unibuc.fmi.expensetracker.dto.UserDTO;
+import ro.unibuc.fmi.expensetracker.model.Expense;
 import ro.unibuc.fmi.expensetracker.model.User;
+import ro.unibuc.fmi.expensetracker.repository.ExpenseRepository;
 import ro.unibuc.fmi.expensetracker.service.UserService;
 import ro.unibuc.fmi.expensetracker.singleton.LogApplicationRequests;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class UserController implements UserApi {
 
     private final UserService userService;
+    private final ExpenseRepository expenseRepository;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ExpenseRepository expenseRepository) {
         this.userService = userService;
+        this.expenseRepository = expenseRepository;
     }
 
     @Override
@@ -41,6 +49,21 @@ public class UserController implements UserApi {
     @Override
     public void updateEmail(Long userId, String email) {
         userService.updateEmail(userId, email);
+    }
+
+    @Override
+    public List<ExpenseDTO> getExpensesReport(LocalDateTime start, LocalDateTime end) {
+        List<Expense> allExpenses;
+        if (start != null && end != null) {
+            allExpenses = expenseRepository.findAllByInsertedDateIsAfterAndInsertedDateBefore(start, end);
+        } else {
+            allExpenses = expenseRepository.findAll();
+        }
+
+        return allExpenses
+                .stream()
+                .map(ExpenseDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -7,15 +7,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ro.unibuc.fmi.expensetracker.dto.ExpenseDTO;
 import ro.unibuc.fmi.expensetracker.dto.UserDTO;
 import ro.unibuc.fmi.expensetracker.exception.ApiError;
 import ro.unibuc.fmi.expensetracker.model.User;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Tag(name = "users", description = "User API")
 @Validated
@@ -66,5 +70,15 @@ public interface UserApi {
             produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     BigDecimal getUserAmountToPay(@Parameter(description = "ID of User to return", required = true) @PathVariable("userId") Long userId, @Parameter(description = "ID of Expense to return", required = true) @PathVariable("expenseId") Long expenseId);
+
+    @Operation(summary = "Generate user expenses report", operationId = "getUserReport", description = "Returns the expenses report for a specific user", tags = {"users, expenses, report"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "User not found or Report not generated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)))})
+    @GetMapping(value = "/users/expenses/report",
+            produces = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    List<ExpenseDTO> getExpensesReport(@Parameter(description = "Begin date for report generation", required = false) @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                       @Parameter(description = "End date for report generation", required = false) @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end);
 
 }
