@@ -44,7 +44,7 @@ public class Expense {
     @Schema
     private ExpenseType expenseType;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
