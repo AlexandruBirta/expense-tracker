@@ -24,6 +24,7 @@ import java.util.List;
 @Tag(name = "users", description = "User API")
 @Validated
 @RequestMapping(value = "/v1")
+@CrossOrigin(origins = "http://localhost:4200")
 public interface UserApi {
 
     @Operation(summary = "Creates an user", operationId = "createUser", tags = {"users"})
@@ -43,6 +44,15 @@ public interface UserApi {
             produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     User getUserById(@Parameter(description = "ID of User to return", required = true) @PathVariable("userId") Long userId);
+
+    @Operation(summary = "Find user by email", operationId = "getUserByEmail", description = "Returns a single User", tags = {"users"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)))})
+    @GetMapping(value = "/users/email/{email}",
+            produces = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    User getUserByEmail(@Parameter(description = "Email of User to return", required = true) @PathVariable("email") String email);
 
     @Operation(summary = "Deletes an user", operationId = "deleteUser", tags = {"users"})
     @ApiResponses(value = {

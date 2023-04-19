@@ -1,5 +1,6 @@
 package ro.unibuc.fmi.expensetracker.service;
 
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import ro.unibuc.fmi.expensetracker.repository.UserRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Base64;
 import java.util.List;
 
 @Slf4j
@@ -34,6 +36,10 @@ public class UserService {
                 throw new ApiException(ExceptionStatus.USER_ALREADY_EXISTS, repoUser.getEmail());
             }
         }
+
+        String encodedPassword = Base64.getEncoder().encodeToString(user.getPassword().getBytes());
+
+        user.setPassword(encodedPassword);
 
         log.info("Created " + user);
 
@@ -90,6 +96,10 @@ public class UserService {
 
     private boolean isUserParticipatingInExpense(Long userId, Expense expense) {
         return expense.getUsers().stream().anyMatch(expenseUser -> expenseUser.getUserId().equals(userId));
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.getUserByEmail(email).orElseThrow(() -> new ApiException(ExceptionStatus.USER_NOT_FOUND, String.valueOf(email)));
     }
 
 }

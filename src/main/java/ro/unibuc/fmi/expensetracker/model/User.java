@@ -42,6 +42,10 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Schema(maximum = "50", required = true)
+    @Column(nullable = false)
+    private String password;
+
     @Schema
     @Column(nullable = false)
     @CreationTimestamp

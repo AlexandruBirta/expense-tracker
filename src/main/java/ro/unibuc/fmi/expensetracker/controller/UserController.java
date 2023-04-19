@@ -1,5 +1,6 @@
 package ro.unibuc.fmi.expensetracker.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,6 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class UserController implements UserApi {
@@ -42,6 +42,11 @@ public class UserController implements UserApi {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        return userService.getUserByEmail(email);
+    }
+
+    @Override
     public void deleteUser(Long userId) {
         userService.deleteUser(userId);
     }
@@ -63,7 +68,7 @@ public class UserController implements UserApi {
         return allExpenses
                 .stream()
                 .map(ExpenseDTO::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
