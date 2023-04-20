@@ -8,6 +8,7 @@ import ro.unibuc.fmi.expensetracker.api.UserApi;
 import ro.unibuc.fmi.expensetracker.dto.ExpenseDTO;
 import ro.unibuc.fmi.expensetracker.dto.UserDTO;
 import ro.unibuc.fmi.expensetracker.model.Expense;
+import ro.unibuc.fmi.expensetracker.model.Trip;
 import ro.unibuc.fmi.expensetracker.model.User;
 import ro.unibuc.fmi.expensetracker.repository.ExpenseRepository;
 import ro.unibuc.fmi.expensetracker.service.UserService;
@@ -69,6 +70,11 @@ public class UserController implements UserApi {
                 .stream()
                 .map(ExpenseDTO::new)
                 .toList();
+    }
+
+    @Override
+    public List<Trip> getUserTrips(String email) {
+        return userService.getUserTrips(email);
     }
 
     @Override

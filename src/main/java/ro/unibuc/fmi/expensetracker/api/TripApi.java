@@ -22,6 +22,7 @@ import java.util.List;
 @Tag(name = "trips", description = "Trip API")
 @Validated
 @RequestMapping(value = "/v1")
+@CrossOrigin(origins = "http://localhost:4200")
 public interface TripApi {
 
     @Operation(summary = "Creates a trip", operationId = "createTrip", tags = {"trips"})
@@ -77,5 +78,15 @@ public interface TripApi {
             produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     BigDecimal getTripTotalSum(@Parameter(description = "ID of Trip", required = true) @PathVariable("tripId") Long tripId);
+
+    @Operation(summary = "Find expense by trip ID", operationId = "getExpensesByTripId", description = "Returns expenses by trip ID", tags = {"expenses"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "Expenses not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)))})
+    @GetMapping(value = "/trips/{tripId}/expenses",
+            produces = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    List<Expense> getExpensesByTripId(@Parameter(description = "ID of Trip to search expenses by", required = true) @PathVariable("tripId") Long tripId);
+
 
 }

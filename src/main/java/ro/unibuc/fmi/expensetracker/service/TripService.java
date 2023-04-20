@@ -1,5 +1,6 @@
 package ro.unibuc.fmi.expensetracker.service;
 
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -7,15 +8,16 @@ import org.springframework.transaction.annotation.Transactional;
 import ro.unibuc.fmi.expensetracker.dto.TripDTO;
 import ro.unibuc.fmi.expensetracker.exception.ApiException;
 import ro.unibuc.fmi.expensetracker.exception.ExceptionStatus;
+import ro.unibuc.fmi.expensetracker.model.Expense;
 import ro.unibuc.fmi.expensetracker.model.Trip;
 import ro.unibuc.fmi.expensetracker.model.User;
+import ro.unibuc.fmi.expensetracker.repository.ExpenseRepository;
 import ro.unibuc.fmi.expensetracker.repository.TripRepository;
 import ro.unibuc.fmi.expensetracker.repository.UserRepository;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 @Slf4j
 @Service
@@ -26,6 +28,8 @@ public class TripService {
     private final TripRepository tripRepository;
 
     private final UserRepository userRepository;
+
+    private final ExpenseRepository expenseRepository;
 
     public Trip createTrip(Trip trip) {
         return tripRepository.save(trip);
@@ -71,6 +75,10 @@ public class TripService {
     public BigDecimal getTripTotalSum(Long tripId) {
         return tripRepository.findById(tripId).orElseThrow(
                 () -> new ApiException(ExceptionStatus.TRIP_NOT_FOUND, String.valueOf(tripId))).getExpenseTotalSum();
+    }
+
+    public List<Expense> getExpensesByTripId(Long tripId) {
+        return expenseRepository.findAllByTripTripId(tripId);
     }
 
 }

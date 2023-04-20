@@ -75,4 +75,9 @@ public class TripController implements TripApi {
         return tripService.getTripTotalSum(tripId);
     }
 
+    @Override
+    public List<Expense> getExpensesByTripId(Long tripId) {
+        return tripService.getExpensesByTripId(tripId);
+    }
+
 }

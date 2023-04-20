@@ -9,5 +9,10 @@ import java.util.List;
 
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
+
     List<Expense> findAllByInsertedDateIsAfterAndInsertedDateBefore(LocalDateTime start, LocalDateTime end);
+
+    List<Expense> findAllByTripTripId(Long tripId);
+
+
 }

@@ -9,14 +9,17 @@ import ro.unibuc.fmi.expensetracker.dto.UserDTO;
 import ro.unibuc.fmi.expensetracker.exception.ApiException;
 import ro.unibuc.fmi.expensetracker.exception.ExceptionStatus;
 import ro.unibuc.fmi.expensetracker.model.Expense;
+import ro.unibuc.fmi.expensetracker.model.Trip;
 import ro.unibuc.fmi.expensetracker.model.User;
 import ro.unibuc.fmi.expensetracker.repository.ExpenseRepository;
+import ro.unibuc.fmi.expensetracker.repository.TripRepository;
 import ro.unibuc.fmi.expensetracker.repository.UserRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Base64;
 import java.util.List;
+
 
 @Slf4j
 @Service
@@ -26,6 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
+    private final TripRepository tripRepository;
 
     public UserDTO createUser(User user) {
 
@@ -100,6 +104,11 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return userRepository.getUserByEmail(email).orElseThrow(() -> new ApiException(ExceptionStatus.USER_NOT_FOUND, String.valueOf(email)));
+    }
+
+    public List<Trip> getUserTrips(String email) {
+        User user = getUserByEmail(email);
+        return tripRepository.getTripByInitiatedByUserId(user.getUserId());
     }
 
 }

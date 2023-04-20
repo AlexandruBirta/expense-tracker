@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.unibuc.fmi.expensetracker.dto.ExpenseDTO;
 import ro.unibuc.fmi.expensetracker.dto.UserDTO;
 import ro.unibuc.fmi.expensetracker.exception.ApiError;
+import ro.unibuc.fmi.expensetracker.model.Trip;
 import ro.unibuc.fmi.expensetracker.model.User;
 
 import javax.validation.Valid;
@@ -88,7 +89,16 @@ public interface UserApi {
     @GetMapping(value = "/users/expenses/report",
             produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    List<ExpenseDTO> getExpensesReport(@Parameter(description = "Begin date for report generation", required = false) @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-                                       @Parameter(description = "End date for report generation", required = false) @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end);
+    List<ExpenseDTO> getExpensesReport(@Parameter(description = "Begin date for report generation") @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                       @Parameter(description = "End date for report generation") @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end);
+
+    @Operation(summary = "Find trips by user email", operationId = "getUserTrips", description = "Returns a list of trips based on user email", tags = {"trips"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "Trips not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class)))})
+    @GetMapping(value = "/users/{email}/trips",
+            produces = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    List<Trip> getUserTrips(@Parameter(description = "Email of user to search trips by", required = true) @PathVariable("email") String email);
 
 }

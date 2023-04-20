@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import ro.unibuc.fmi.expensetracker.exception.ApiError;
 import ro.unibuc.fmi.expensetracker.model.Notification;
 
@@ -22,6 +19,7 @@ import java.util.List;
 @Tag(name = "notifications", description = "Notification API")
 @Validated
 @RequestMapping(value = "/v1")
+@CrossOrigin(origins = "http://localhost:4200")
 public interface NotificationApi {
 
 
